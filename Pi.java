@@ -1,5 +1,3 @@
-import javafx.util.Pair;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -46,13 +44,13 @@ public class Pi {
             return;
         }
 
-        MyThread[] threads = new MyThread[threadsNumber];
+        PiThread[] threads = new PiThread[threadsNumber];
 
         List<Pair<Integer, Integer>> pairs = calculatePairs(precision, threadsNumber);
 
         for (int t = 0; t < threadsNumber; t++) {
 
-            MyThread thread = new MyThread("Thread " + t, quiet, pairs.get(t));
+            PiThread thread = new PiThread("Thread " + t, quiet, pairs.get(t));
             thread.start();
             threads[t] = thread;
         }
