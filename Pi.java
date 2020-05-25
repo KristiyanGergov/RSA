@@ -6,23 +6,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import static java.math.BigDecimal.valueOf;
+
 public class Pi {
-
-    static int numThread;
-    static String threadName;
-    static boolean quit = false;
-    static MyThread[] array;
-
-    public static void main(String[] args) {
-        String[] list = new String[]{
-                "-p",
-                "10240",
-                "-t",
-                "3"
-        };
-
-        main2(list);
-    }
 
     private static List<Pair<Integer, Integer>> calculatePairs(int precision, int numberOfThreads) {
         int num = precision / numberOfThreads;
@@ -37,56 +23,56 @@ public class Pi {
         return pairs;
     }
 
-    public static void main2(String[] args) {
+    public static void main(String[] args) {
         long timeOfStart = Calendar.getInstance().getTimeInMillis();
 
         int precision = 0;
+        int threadsNumber = 0;
+        boolean quiet = false;
 
         for (int i = 0; i < args.length; i++) {
             if (args[i].equals("-p")) {
                 precision = Integer.parseInt(args[i + 1]);
             }
             if (args[i].equals("-t")) {
-                numThread = Integer.parseInt(args[i + 1]);
+                threadsNumber = Integer.parseInt(args[i + 1]);
             }
             if (args[i].equals("-q")) {
-                quit = true;
+                quiet = true;
             }
         }
-        if (precision <= 0 || numThread <= 0 || args.length < 4 || args.length > 5) {
+        if (precision <= 0 || threadsNumber <= 0 || args.length < 4 || args.length > 5) {
             System.out.println("ERROR: Args are not correct!!!");
             return;
         }
 
-        array = new MyThread[numThread];
+        MyThread[] threads = new MyThread[threadsNumber];
 
-        List<Pair<Integer, Integer>> pairs = calculatePairs(precision, numThread);
+        List<Pair<Integer, Integer>> pairs = calculatePairs(precision, threadsNumber);
 
-        for (int t = 0; t < numThread; t++) {
+        for (int t = 0; t < threadsNumber; t++) {
 
-            MyThread thread = new MyThread("Thread " + t, quit, pairs.get(t));
+            MyThread thread = new MyThread("Thread " + t, quiet, pairs.get(t));
             thread.start();
-            array[t] = thread;
+            threads[t] = thread;
         }
 
         BigDecimal sum = new BigDecimal(0);
-        for (int i = 0; i < numThread; i++) {
+        for (int i = 0; i < threadsNumber; i++) {
             try {
-                array[i].join();
+                threads[i].join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            sum = sum.add(array[i].sum);
+            sum = sum.add(threads[i].sum);
         }
 
-        double pi = sum.divide(BigDecimal.valueOf(882 / 4), RoundingMode.CEILING).doubleValue();
+        double pi = sum.divide(valueOf(882 * 4), RoundingMode.CEILING).doubleValue();
+        pi = Math.pow(pi, -1);
 
         long timeOfEnd = Calendar.getInstance().getTimeInMillis();
-        if (!quit) {
-            System.out.println("Points in circle: " + sum);
-        }
-        System.out.println("Time of calculate Pi: " + (timeOfEnd - timeOfStart) + " millis");
-        System.out.println("Calculate Pi: " + pi);
 
+        System.out.println("Time to calculate Pi: " + (timeOfEnd - timeOfStart) + " millis");
+        System.out.println("Calculate Pi: " + pi);
     }
 }
