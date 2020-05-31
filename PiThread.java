@@ -1,11 +1,10 @@
 import java.math.BigDecimal;
 
 public class PiThread extends Thread {
+    BigDecimal sum = new BigDecimal(0);
     private String nameThread;
     private boolean quit;
     private Pair<Integer, Integer> pair;
-
-    BigDecimal sum = new BigDecimal(0);
 
     public PiThread(String nameThread, boolean quit, Pair<Integer, Integer> pair) {
         this.nameThread = nameThread;
