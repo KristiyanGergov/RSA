@@ -1,0 +1,2 @@
+Time to calculate Pi: 778 millis
+Calculate Pi: 3.1415926513464587
