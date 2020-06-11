@@ -87,8 +87,8 @@ public class Pi {
                 sum = sum.add(threads[i].sum);
             }
 
-            double pi = sum.divide(valueOf(99).pow(2), RoundingMode.CEILING).multiply(
-                    valueOf(8).sqrt(MathContext.DECIMAL64)).doubleValue();
+            double eightSqrt = Math.sqrt(8);
+            double pi = sum.divide(valueOf(99).pow(2), RoundingMode.CEILING).multiply(valueOf(eightSqrt)).doubleValue();
             pi = Math.pow(pi, -1);
 
             long timeOfEnd = Calendar.getInstance().getTimeInMillis();
