@@ -54,7 +54,7 @@ public class Pi {
                 quiet = true;
             }
         }
-        if (precision <= 0 || threadsNumber <= 0 || fileName.isBlank() || allRequiredArgsProvided.contains(false)) {
+        if (precision <= 0 || threadsNumber <= 0 || fileName.equals("") || allRequiredArgsProvided.contains(false)) {
             System.err.println(
                     "Some of the args are not correct: Example valid input: \n" +
                     "java Pi \"-p\" (required) \"10\" \"-t\" (required) \"5\" \"-o\" (required) \"output.txt\" -q (optional)"
