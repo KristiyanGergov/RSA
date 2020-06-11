@@ -2,6 +2,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,7 +58,7 @@ public class Pi {
         if (precision <= 0 || threadsNumber <= 0 || fileName.equals("") || allRequiredArgsProvided.contains(false)) {
             System.err.println(
                     "Some of the args are not correct: Example valid input: \n" +
-                    "java Pi \"-p\" (required) \"10\" \"-t\" (required) \"5\" \"-o\" (required) \"output.txt\" -q (optional)"
+                            "java Pi \"-p\" (required) \"10\" \"-t\" (required) \"5\" \"-o\" (required) \"output.txt\" -q (optional)"
             );
             return;
         }
@@ -86,7 +87,8 @@ public class Pi {
                 sum = sum.add(threads[i].sum);
             }
 
-            double pi = sum.divide(valueOf(882 * 4), RoundingMode.CEILING).doubleValue();
+            double pi = sum.divide(valueOf(99).pow(2), RoundingMode.CEILING).multiply(
+                    valueOf(8).sqrt(MathContext.DECIMAL64)).doubleValue();
             pi = Math.pow(pi, -1);
 
             long timeOfEnd = Calendar.getInstance().getTimeInMillis();
