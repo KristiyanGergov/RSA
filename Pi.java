@@ -13,14 +13,22 @@ import static java.math.BigDecimal.valueOf;
 public class Pi {
 
     private static List<Pair<Integer, Integer>> calculatePairs(int precision, int numberOfThreads) {
-        int num = precision / numberOfThreads;
+        int num = (precision / numberOfThreads) / 2;
 
         List<Pair<Integer, Integer>> pairs = new ArrayList<>();
 
-        for (int i = 0; i < numberOfThreads - 1; i++) {
-            pairs.add(new Pair<>(num * i, num * i + num));
+        for (int i = 0; i < numberOfThreads; i++) {
+            if (i == 0) {
+                pairs.add(new Pair<>(0, num));
+                pairs.add(new Pair<>(precision - num, precision));
+            } else if (i == numberOfThreads - 1) {
+                pairs.add(new Pair<>(num * i + 1, num * (i + 1)));
+                pairs.add(new Pair<>(precision - (num * (i + 1) - 1), precision - (num * i + 1)));
+            } else {
+                pairs.add(new Pair<>(num * i + 1, num * (i + 1)));
+                pairs.add(new Pair<>(precision - (num * (i + 1)), precision - (num * i + 1)));
+            }
         }
-        pairs.add(new Pair<>(num * (numberOfThreads - 1), precision));
 
         return pairs;
     }
@@ -57,7 +65,7 @@ public class Pi {
         if (precision <= 0 || threadsNumber <= 0 || fileName.equals("") || allRequiredArgsProvided.contains(false)) {
             System.err.println(
                     "Some of the args are not correct: Example valid input: \n" +
-                    "java Pi \"-p\" (required) \"10\" \"-t\" (required) \"5\" \"-o\" (required) \"output.txt\" -q (optional)"
+                            "java Pi \"-p\" (required) \"10\" \"-t\" (required) \"5\" \"-o\" (required) \"output.txt\" -q (optional)"
             );
             return;
         }
@@ -71,7 +79,7 @@ public class Pi {
 
             for (int t = 0; t < threadsNumber; t++) {
 
-                PiThread thread = new PiThread("Thread " + (t + 1), quiet, pairs.get(t));
+                PiThread thread = new PiThread("Thread " + (t + 1), quiet, pairs.get(t), pairs.get(t + 1));
                 thread.start();
                 threads[t] = thread;
             }
